@@ -9,6 +9,10 @@ import java.util.List;
 @Repository
 public interface ExampleHistoryRepository extends JpaRepository<ExampleHistory, Long> {
     List<ExampleHistory> findByCourseId(Long courseId);
+
     List<ExampleHistory> findByLessonId(Long lessonId);
+
     List<ExampleHistory> findByStudentId(Long studentId);
+
+    List<ExampleHistory> findByCourseIdAndLessonId(Long courseId, Long lessonId);
 }

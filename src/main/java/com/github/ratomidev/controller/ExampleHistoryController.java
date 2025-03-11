@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/example-histories")
-@CrossOrigin(origins = "http://localhost:4200")
+
 public class ExampleHistoryController {
     @Autowired
     private ExampleHistoryService exampleHistoryService;
@@ -41,6 +42,13 @@ public class ExampleHistoryController {
     @GetMapping("/student/{studentId}")
     public List<ExampleHistory> getExampleHistoriesByStudentId(@PathVariable Long studentId) {
         return exampleHistoryService.getExampleHistoriesByStudentId(studentId);
+    }
+
+    @GetMapping("/course/{courseId}/lesson/{lessonId}")
+    public List<ExampleHistory> getExampleHistoriesByCourseIdAndLessonId(
+            @PathVariable Long courseId,
+            @PathVariable Long lessonId) {
+        return exampleHistoryService.getExampleHistoriesByCourseIdAndLessonId(courseId, lessonId);
     }
 
     @PostMapping("/course/{courseId}/lesson/{lessonId}")

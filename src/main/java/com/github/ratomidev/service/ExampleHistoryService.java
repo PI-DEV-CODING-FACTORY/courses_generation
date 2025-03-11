@@ -44,6 +44,10 @@ public class ExampleHistoryService {
         return exampleHistoryRepository.findByStudentId(studentId);
     }
 
+    public List<ExampleHistory> getExampleHistoriesByCourseIdAndLessonId(Long courseId, Long lessonId) {
+        return exampleHistoryRepository.findByCourseIdAndLessonId(courseId, lessonId);
+    }
+
     public ExampleHistory createExampleHistory(Long courseId, Long lessonId, ExampleHistory exampleHistory) {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new RuntimeException("Course not found"));

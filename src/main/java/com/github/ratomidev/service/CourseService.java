@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.ratomidev.entity.Course;
 import com.github.ratomidev.entity.Lesson;
+import com.github.ratomidev.entity.ExampleHistory;
 import com.github.ratomidev.llm.AiModel;
 import com.github.ratomidev.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,23 @@ public class CourseService {
                 lesson.setTitle(lessonNode.get("title").asText());
                 lesson.setContent(lessonNode.get("content").asText());
                 lesson.setCourse(course);
+
+                // Generate example for the lesson
+                String templateExample = "Generate a practical example to explain this lesson content: " + lesson.getContent()+ "it should be a string  maximum 30 words and it can contains code.";
+                String exampleResponse = aiModel.getAnswer(templateExample);
+               // String exampleResponse = "This is an example for the lesson content";
+                // Create ExampleHistory
+                ExampleHistory exampleHistory = new ExampleHistory();
+                exampleHistory.setStudentId(1101L); // Using default student ID
+                exampleHistory.setNewExample(exampleResponse);
+                exampleHistory.setCourse(course);
+                exampleHistory.setLesson(lesson);
+
+                // Set the example history to lesson
+                List<ExampleHistory> exampleHistories = new ArrayList<>();
+                exampleHistories.add(exampleHistory);
+                lesson.setExampleHistories(exampleHistories);
+
                 lessonsList.add(lesson);
             }
 
