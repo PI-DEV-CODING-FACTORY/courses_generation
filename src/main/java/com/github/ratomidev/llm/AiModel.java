@@ -69,7 +69,7 @@ public class AiModel {
                 return content;
             } else {
                 // Handle error response
-                return "Error: " + responseCode;
+                return "Error: " + responseCode ;
             }
         } catch (Exception e) {
             e.printStackTrace();

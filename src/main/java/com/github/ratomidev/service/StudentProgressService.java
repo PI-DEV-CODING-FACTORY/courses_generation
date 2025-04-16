@@ -32,15 +32,19 @@ public class StudentProgressService {
     }
 
     public List<StudentProgress> getProgressByCourseId(Long courseId) {
-        return studentProgressRepository.findByCourseId(courseId);
+        return studentProgressRepository.findByCourse_Id(courseId);
     }
 
     public List<StudentProgress> getProgressByLessonId(Long lessonId) {
-        return studentProgressRepository.findByLessonId(lessonId);
+        return studentProgressRepository.findByLesson_Id(lessonId);
     }
 
     public List<StudentProgress> getProgressByStudentId(Long studentId) {
         return studentProgressRepository.findByStudentId(studentId);
+    }
+
+    public List<StudentProgress> getProgressByCourseIdAndLessonId(Long courseId, Long lessonId) {
+        return studentProgressRepository.findByCourse_IdAndLesson_Id(courseId, lessonId);
     }
 
     public StudentProgress createProgress(Long courseId, Long lessonId, StudentProgress progress) {
@@ -51,6 +55,16 @@ public class StudentProgressService {
 
         progress.setCourse(course);
         progress.setLesson(lesson);
+        return studentProgressRepository.save(progress);
+    }
+
+    /**
+     * Create a progress entry directly from a populated StudentProgress object
+     * 
+     * @param progress The fully populated StudentProgress object
+     * @return The saved StudentProgress
+     */
+    public StudentProgress createProgress(StudentProgress progress) {
         return studentProgressRepository.save(progress);
     }
 

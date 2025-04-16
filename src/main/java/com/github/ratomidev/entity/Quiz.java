@@ -29,6 +29,7 @@ public class Quiz {
     private String title;
 
 
+    @Column(columnDefinition = "TEXT")
     private String questions;
 
     private LocalDateTime createdAt;

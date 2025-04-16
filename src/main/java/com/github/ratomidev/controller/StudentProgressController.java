@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/progress")
 public class StudentProgressController {
@@ -41,6 +42,15 @@ public class StudentProgressController {
         return studentProgressService.getProgressByStudentId(studentId);
     }
 
+    @GetMapping("/course/{courseId}/lesson/{lessonId}")
+    public List<StudentProgress> getProgressByCourseIdAndLessonId(
+            @PathVariable Long courseId,
+            @PathVariable Long lessonId) {
+        return studentProgressService.getProgressByCourseIdAndLessonId(courseId, lessonId);
+    }
+
+ 
+
     @PostMapping("/course/{courseId}/lesson/{lessonId}")
     public ResponseEntity<StudentProgress> createProgress(
             @PathVariable Long courseId,
@@ -50,7 +60,8 @@ public class StudentProgressController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<StudentProgress> updateProgress(@PathVariable Long id, @RequestBody StudentProgress progress) {
+    public ResponseEntity<StudentProgress> updateProgress(@PathVariable Long id,
+            @RequestBody StudentProgress progress) {
         return studentProgressService.getProgressById(id)
                 .map(existingProgress -> {
                     progress.setId(id);

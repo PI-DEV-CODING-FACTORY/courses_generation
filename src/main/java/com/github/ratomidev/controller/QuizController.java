@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/quizzes")
 public class QuizController {
@@ -34,6 +35,13 @@ public class QuizController {
     @GetMapping("/lesson/{lessonId}")
     public List<Quiz> getQuizzesByLessonId(@PathVariable Long lessonId) {
         return quizService.getQuizzesByLessonId(lessonId);
+    }
+
+    @GetMapping("/course/{courseId}/lesson/{lessonId}")
+    public List<Quiz> getQuizzesByCourseIdAndLessonId(
+            @PathVariable Long courseId,
+            @PathVariable Long lessonId) {
+        return quizService.getQuizzesByCourseIdAndLessonId(courseId, lessonId);
     }
 
     @PostMapping("/course/{courseId}/lesson/{lessonId}")

@@ -2,11 +2,11 @@ package com.github.ratomidev.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.ratomidev.entity.Course;
 import com.github.ratomidev.entity.Lesson;
 import com.github.ratomidev.entity.ExampleHistory;
+import com.github.ratomidev.entity.Quiz;
 import com.github.ratomidev.llm.AiModel;
 import com.github.ratomidev.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,9 @@ import java.util.Optional;
 public class CourseService {
     @Autowired
     private CourseRepository courseRepository;
+
+    @Autowired
+    private QuizService quizService;
 
     public List<Course> getAllCourses() {
         return courseRepository.findAll();
@@ -56,9 +59,10 @@ public class CourseService {
                 lesson.setCourse(course);
 
                 // Generate example for the lesson
-                String templateExample = "Generate a practical example to explain this lesson content: " + lesson.getContent()+ "it should be a string  maximum 30 words and it can contains code.";
+                String templateExample = "Generate a practical example to explain this lesson content: "
+                        + lesson.getContent() + "it should be a string  maximum 30 words and it can contains code.";
                 String exampleResponse = aiModel.getAnswer(templateExample);
-               // String exampleResponse = "This is an example for the lesson content";
+                // String exampleResponse = "This is an example for the lesson content";
                 // Create ExampleHistory
                 ExampleHistory exampleHistory = new ExampleHistory();
                 exampleHistory.setStudentId(1101L); // Using default student ID
@@ -77,16 +81,26 @@ public class CourseService {
             // Set the lessons list to the course
             course.setLessons(lessonsList);
 
+            // Save the course first to get IDs
+            Course savedCourse = courseRepository.save(course);
+
+            // Create quizzes for each lesson
+            for (Lesson lesson : savedCourse.getLessons()) {
+                Quiz quiz = new Quiz();
+                quiz.setTitle("Quiz for " + lesson.getTitle());
+                quizService.createQuiz(savedCourse.getId(), lesson.getId(), quiz);
+            }
+
             // Debug output
-            System.out.println("Created " + lessonsList.size() + " lessons for the course");
+            System.out.println("Created " + lessonsList.size() + " lessons with quizzes for the course");
+
+            return savedCourse;
 
         } catch (Exception e) {
             System.err.println("Error parsing JSON response: " + e.getMessage());
             System.err.println("AI Response was: " + aiResponse);
             throw new Exception("Failed to parse lessons JSON from AI model");
         }
-
-        return courseRepository.save(course);
     }
 
     public Course updateCourse(Course course) {

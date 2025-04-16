@@ -22,15 +22,22 @@ public class StudentProgress {
     @JsonIgnore
     private Course course;
 
+    // Add transient field to expose course ID in JSON
+    @Transient
+    private Long courseId;
+
     @ManyToOne
     @JoinColumn(name = "lesson_id", nullable = false)
     @JsonIgnore
     private Lesson lesson;
 
+    // Add transient field to expose lesson ID in JSON
+    @Transient
+    private Long lessonId;
+
     private Boolean completed;
 
     private Float score;
-
 
     private String weakAreas;
 
@@ -119,5 +126,23 @@ public class StudentProgress {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    // Add methods to get course ID
+    public Long getCourseId() {
+        return course != null ? course.getId() : courseId;
+    }
+
+    public void setCourseId(Long courseId) {
+        this.courseId = courseId;
+    }
+
+    // Add methods to get lesson ID
+    public Long getLessonId() {
+        return lesson != null ? lesson.getId() : lessonId;
+    }
+
+    public void setLessonId(Long lessonId) {
+        this.lessonId = lessonId;
     }
 }
